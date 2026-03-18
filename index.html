@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Материалы к Уроку Claude Code + Nano Banana 2 | Мастодонт</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg1: #0a0a0f;
+            --bg2: #12121a;
+            --bg3: #1a1a26;
+            --text1: #e8e6f0;
+            --text2: #9d9bb0;
+            --text3: #6b6980;
+            --accent1: #ff6b35;
+            --accent2: #ff2d78;
+            --accent3: #ff8f5e;
+            --gradient1: linear-gradient(135deg, var(--accent1), var(--accent2));
+            --gradient2: linear-gradient(135deg, var(--accent1), var(--accent3));
+            --border1: rgba(255,255,255,0.06);
+            --border2: rgba(255,255,255,0.1);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --shadow-glow: 0 0 60px rgba(255,107,53,0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html {
+            scroll-behavior: smooth;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent1) var(--bg2);
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg2); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--accent1), var(--accent2)); border-radius: 3px; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg1);
+            color: var(--text1);
+            line-height: 1.7;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background:
+                radial-gradient(ellipse 600px 600px at 20% 20%, rgba(255,107,53,0.06), transparent),
+                radial-gradient(ellipse 500px 500px at 80% 60%, rgba(255,45,120,0.05), transparent),
+                radial-gradient(ellipse 400px 400px at 50% 80%, rgba(255,143,94,0.04), transparent);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            opacity: 0.025;
+            pointer-events: none;
+            z-index: 9999;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 256px 256px;
+        }
+
+        .wrapper {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* NAV */
+        .nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(10,10,15,0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 2px solid transparent;
+            border-image: linear-gradient(90deg, transparent 0%, var(--accent1) 30%, var(--accent2) 70%, transparent 100%) 1;
+        }
+
+        .nav-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .nav-brand {
+            font-family: 'Unbounded', sans-serif;
+            font-weight: 800;
+            font-size: 16px;
+            letter-spacing: 3px;
+            background: var(--gradient1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links { display: flex; gap: 8px; }
+
+        .nav-link {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text2);
+            text-decoration: none;
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--border1);
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        .nav-link:hover {
+            color: var(--text1);
+            border-color: var(--accent1);
+            background: rgba(255,107,53,0.08);
+        }
+
+        /* HERO */
+        .hero {
+            padding: clamp(80px, 12vh, 140px) 0 clamp(60px, 8vh, 100px);
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            font-family: 'Unbounded', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent1);
+            border: 1px solid rgba(255,107,53,0.3);
+            padding: 8px 20px;
+            border-radius: 30px;
+            margin-bottom: 28px;
+            background: rgba(255,107,53,0.06);
+        }
+
+        .hero h1 {
+            font-family: 'Unbounded', sans-serif;
+            font-size: clamp(28px, 5vw, 52px);
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 20px;
+            background: var(--gradient1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-sub {
+            font-size: clamp(15px, 1.8vw, 18px);
+            color: var(--text2);
+            max-width: 600px;
+            margin: 0 auto 36px;
+            line-height: 1.6;
+        }
+
+        .hero-yt {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--bg2);
+            border: 1px solid var(--border2);
+            border-radius: 12px;
+            padding: 14px 22px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .hero-yt:hover { border-color: var(--accent1); box-shadow: var(--shadow-glow); }
+        .hero-yt-icon { font-size: 20px; }
+        .hero-yt-text { font-size: 14px; color: var(--text2); }
+        .hero-yt-text strong { color: var(--text1); font-weight: 600; }
+        .hero-yt-copy {
+            font-size: 12px;
+            color: var(--accent1);
+            border: 1px solid rgba(255,107,53,0.3);
+            padding: 4px 12px;
+            border-radius: 6px;
+            background: rgba(255,107,53,0.08);
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .hero-yt-copy:hover { background: rgba(255,107,53,0.15); }
+
+        /* SECTIONS */
+        .section { margin-bottom: clamp(60px, 8vh, 100px); }
+        .section-title {
+            font-family: 'Unbounded', sans-serif;
+            font-size: clamp(20px, 3vw, 28px);
+            font-weight: 700;
+            margin-bottom: 32px;
+            color: var(--text1);
+        }
+        .section-title .emoji { margin-right: 10px; }
+
+        /* LEARN CARDS */
+        .learn-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 16px;
+        }
+        .learn-card {
+            background: var(--bg2);
+            border: 1px solid var(--border1);
+            border-radius: var(--radius-sm);
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .learn-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: var(--gradient1);
+        }
+        .learn-card:hover { border-color: rgba(255,107,53,0.2); transform: translateY(-2px); }
+        .learn-card-icon { font-size: 24px; margin-bottom: 12px; display: block; }
+        .learn-card-text { font-size: 14px; color: var(--text2); line-height: 1.6; }
+
+        /* TOOLS */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 14px;
+        }
+        .tool-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: var(--bg2);
+            border: 1px solid var(--border1);
+            border-radius: var(--radius-sm);
+            padding: 16px 20px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .tool-card:hover { border-color: rgba(255,107,53,0.2); transform: translateY(-1px); }
+        .tool-icon { font-size: 22px; flex-shrink: 0; }
+        .tool-info { flex: 1; min-width: 0; }
+        .tool-name { font-size: 14px; font-weight: 600; color: var(--text1); }
+        .tool-desc { font-size: 12px; color: var(--text3); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .tool-badge {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 6px;
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+        .tool-badge.free { background: rgba(34,197,94,0.12); color: #22c55e; border: 1px solid rgba(34,197,94,0.2); }
+        .tool-badge.paid { background: rgba(255,107,53,0.1); color: var(--accent3); border: 1px solid rgba(255,107,53,0.2); }
+
+        /* STEP CARDS */
+        .step-card {
+            background: var(--bg2);
+            border: 1px solid var(--border1);
+            border-radius: var(--radius);
+            padding: clamp(28px, 4vw, 40px);
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .step-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: var(--gradient1);
+        }
+        .step-card::after {
+            content: '';
+            position: absolute;
+            top: -80px; right: -80px;
+            width: 200px; height: 200px;
+            background: radial-gradient(circle, rgba(255,107,53,0.04), transparent 70%);
+            pointer-events: none;
+        }
+        .step-card:hover { border-color: rgba(255,107,53,0.15); }
+
+        .step-number {
+            font-family: 'Unbounded', sans-serif;
+            font-size: clamp(36px, 5vw, 56px);
+            font-weight: 900;
+            background: var(--gradient1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0.2;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .step-title {
+            font-family: 'Unbounded', sans-serif;
+            font-size: clamp(16px, 2.5vw, 22px);
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text1);
+        }
+
+        .step-desc {
+            font-size: 15px;
+            color: var(--text2);
+            margin-bottom: 24px;
+            line-height: 1.7;
+        }
+
+        .step-actions { margin-bottom: 24px; }
+        .step-action {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 8px 0;
+            font-size: 14px;
+            color: var(--text2);
+            line-height: 1.6;
+        }
+        .step-action-marker {
+            color: var(--accent1);
+            font-weight: 700;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .step-subtitle {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text1);
+            margin: 24px 0 12px;
+        }
+
+        /* PROMPT BLOCKS */
+        .prompt-block {
+            background: rgba(255,107,53,0.03);
+            border: 1px solid rgba(255,107,53,0.1);
+            border-left: 3px solid;
+            border-image: linear-gradient(180deg, var(--accent1), var(--accent2)) 1;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            padding: 20px 24px;
+            margin: 20px 0;
+            position: relative;
+            box-shadow: 0 0 30px rgba(255,107,53,0.04);
+        }
+
+        .prompt-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+        .prompt-label-text {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent1);
+            letter-spacing: 0.5px;
+        }
+
+        .copy-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text3);
+            background: var(--bg3);
+            border: 1px solid var(--border2);
+            border-radius: 6px;
+            padding: 6px 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .copy-btn:hover { color: var(--accent1); border-color: var(--accent1); }
+        .copy-btn.copied { color: #22c55e; border-color: #22c55e; }
+
+        .prompt-code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.7;
+            color: var(--text1);
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        /* SETTINGS */
+        .settings-block {
+            background: var(--bg3);
+            border: 1px solid var(--border1);
+            border-radius: var(--radius-sm);
+            padding: 16px 20px;
+            margin: 16px 0;
+        }
+        .settings-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text1);
+            margin-bottom: 8px;
+        }
+        .settings-item {
+            font-size: 13px;
+            color: var(--text2);
+            padding: 3px 0;
+        }
+
+        /* TIP */
+        .tip {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 13px;
+            color: var(--text3);
+            margin-top: 16px;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.02);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border1);
+            line-height: 1.6;
+        }
+        .tip-icon { flex-shrink: 0; font-size: 16px; }
+
+        /* DIVIDER */
+        .divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255,107,53,0.2), rgba(255,45,120,0.2), transparent);
+            margin: clamp(40px, 6vh, 70px) 0;
+            border: none;
+        }
+
+        /* LINKS SECTION */
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 12px;
+        }
+        .link-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: var(--bg2);
+            border: 1px solid var(--border1);
+            border-radius: var(--radius-sm);
+            padding: 16px 20px;
+            text-decoration: none;
+            transition: all 0.3s;
+            color: var(--text1);
+        }
+        .link-card:hover { border-color: rgba(255,107,53,0.3); transform: translateY(-1px); box-shadow: var(--shadow-glow); }
+        .link-card-icon { font-size: 20px; flex-shrink: 0; }
+        .link-card-info { flex: 1; }
+        .link-card-name { font-size: 14px; font-weight: 600; }
+        .link-card-desc { font-size: 12px; color: var(--text3); margin-top: 2px; }
+        .link-card-arrow { color: var(--text3); transition: all 0.3s; flex-shrink: 0; }
+        .link-card:hover .link-card-arrow { color: var(--accent1); transform: translateX(3px); }
+
+        /* CTA */
+        .cta-block {
+            background: var(--bg2);
+            border: 1px solid var(--border2);
+            border-radius: var(--radius);
+            padding: clamp(32px, 5vw, 48px) clamp(24px, 8vw, 100px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 32px;
+            margin: clamp(60px, 8vh, 100px) 0;
+            animation: ctaGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes ctaGlow {
+            0%, 100% { box-shadow: 0 0 30px rgba(255,107,53,0.06); }
+            50% { box-shadow: 0 0 60px rgba(255,107,53,0.12); }
+        }
+
+        .cta-text {
+            font-family: 'Unbounded', sans-serif;
+            font-size: clamp(16px, 2.5vw, 22px);
+            font-weight: 700;
+            line-height: 1.4;
+            color: var(--text1);
+        }
+        .cta-text .grad {
+            background: var(--gradient1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Unbounded', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+            background: var(--gradient1);
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 18px 40px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(255,107,53,0.3); }
+
+        /* FOOTER */
+        .footer {
+            text-align: center;
+            padding: 48px 0 60px;
+            border-top: 1px solid var(--border1);
+        }
+        .footer-brand {
+            font-family: 'Unbounded', sans-serif;
+            font-weight: 800;
+            font-size: 18px;
+            letter-spacing: 4px;
+            background: var(--gradient1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+        .footer-sub {
+            font-size: 13px;
+            color: var(--text3);
+            margin-bottom: 16px;
+        }
+        .footer-yt {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text2);
+            cursor: pointer;
+            padding: 8px 16px;
+            border: 1px solid var(--border1);
+            border-radius: 8px;
+            background: transparent;
+            transition: all 0.3s;
+        }
+        .footer-yt:hover { border-color: var(--accent1); color: var(--accent1); }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .learn-grid { grid-template-columns: 1fr; }
+            .tools-grid { grid-template-columns: 1fr; }
+            .links-grid { grid-template-columns: 1fr; }
+            .cta-block { flex-direction: column; text-align: center; padding: 32px 24px; }
+            .hero-yt { flex-direction: column; gap: 8px; text-align: center; }
+            .prompt-label { flex-direction: column; align-items: flex-start; gap: 8px; }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .learn-grid { grid-template-columns: repeat(2, 1fr); }
+            .tools-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (min-width: 2560px) {
+            .wrapper { max-width: 1000px; }
+            body { font-size: 17px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+    <div class="nav-inner">
+        <div class="nav-brand">МАСТОДОНТ</div>
+        <div class="nav-links">
+            <a href="#tools" class="nav-link">Инструменты</a>
+            <a href="#steps" class="nav-link">Шаги</a>
+            <a href="#links" class="nav-link">Ссылки</a>
+        </div>
+    </div>
+</nav>
+
+<div class="wrapper">
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-badge">Материалы к уроку</div>
+        <h1>Claude Code + Nano Banana 2 = Безумные сайты за $10,000</h1>
+        <p class="hero-sub">Создаём премиальные 3D-сайты со скролл-анимацией, генерируем визуалы через нейросети и деплоим в интернет за минуту</p>
+        <div class="hero-yt" onclick="copyYT(this)">
+            <span class="hero-yt-icon">🔍</span>
+            <span class="hero-yt-text">Ищи на YouTube: <strong>Claude Code + Nano Banana 2 БЕЗУМНЫЕ Сайты за $10,000</strong></span>
+            <span class="hero-yt-copy">Скопировать</span>
+        </div>
+    </section>
+
+    <!-- WHAT YOU'LL LEARN -->
+    <section class="section">
+        <h2 class="section-title"><span class="emoji">📋</span>Что ты научишься делать</h2>
+        <div class="learn-grid">
+            <div class="learn-card">
+                <span class="learn-card-icon">🎨</span>
+                <span class="learn-card-text">Создавать премиальные 3D-сайты со скролл-анимацией (как у Apple)</span>
+            </div>
+            <div class="learn-card">
+                <span class="learn-card-icon">✨</span>
+                <span class="learn-card-text">Генерировать крутые визуалы и превращать их в видео-анимацию</span>
+            </div>
+            <div class="learn-card">
+                <span class="learn-card-icon">🔄</span>
+                <span class="learn-card-text">Клонировать структуру любого сайта и переделывать под клиента</span>
+            </div>
+            <div class="learn-card">
+                <span class="learn-card-icon">🚀</span>
+                <span class="learn-card-text">Деплоить сайт в интернет через Vercel + GitHub за 1 минуту</span>
+            </div>
+            <div class="learn-card">
+                <span class="learn-card-icon">📊</span>
+                <span class="learn-card-text">Проводить полный SEO-аудит с конкретным планом действий</span>
+            </div>
+            <div class="learn-card">
+                <span class="learn-card-icon">⚡</span>
+                <span class="learn-card-text">Подключать MCP-серверы в Antigravity для автоматизации</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- TOOLS -->
+    <section class="section" id="tools">
+        <h2 class="section-title"><span class="emoji">🛠️</span>Что понадобится</h2>
+        <div class="tools-grid">
+            <a href="https://antigravity.google" target="_blank" class="tool-card">
+                <span class="tool-icon">💻</span>
+                <div class="tool-info">
+                    <div class="tool-name">Antigravity</div>
+                    <div class="tool-desc">AI-IDE от Google на базе Gemini 3, бывший Windsurf</div>
+                </div>
+                <span class="tool-badge free">бесплатно</span>
+            </a>
+            <a href="https://claude.ai" target="_blank" class="tool-card">
+                <span class="tool-icon">🤖</span>
+                <div class="tool-info">
+                    <div class="tool-name">Claude Code</div>
+                    <div class="tool-desc">Расширение внутри Antigravity</div>
+                </div>
+                <span class="tool-badge paid">Claude Pro</span>
+            </a>
+            <a href="https://higgsfield.ai/image/nano_banana_flash" target="_blank" class="tool-card">
+                <span class="tool-icon">🍌</span>
+                <div class="tool-info">
+                    <div class="tool-name">Nano Banana 2</div>
+                    <div class="tool-desc">Генерация картинок через Higgsfield</div>
+                </div>
+                <span class="tool-badge free">бесплатно</span>
+            </a>
+            <a href="https://higgsfield.ai/create/video" target="_blank" class="tool-card">
+                <span class="tool-icon">🎬</span>
+                <div class="tool-info">
+                    <div class="tool-name">Kling 3.0</div>
+                    <div class="tool-desc">Генерация видео из картинок</div>
+                </div>
+                <span class="tool-badge free">бесплатно</span>
+            </a>
+            <a href="https://firecrawl.dev" target="_blank" class="tool-card">
+                <span class="tool-icon">🔥</span>
+                <div class="tool-info">
+                    <div class="tool-name">Firecrawl</div>
+                    <div class="tool-desc">Парсинг брендинга с сайтов</div>
+                </div>
+                <span class="tool-badge free">бесплатно</span>
+            </a>
+            <a href="https://github.com" target="_blank" class="tool-card">
+                <span class="tool-icon">🐙</span>
+                <div class="tool-info">
+                    <div class="tool-name">GitHub</div>
+                    <div class="tool-desc">Хостинг кода</div>
+                </div>
+                <span class="tool-badge free">бесплатно</span>
+            </a>
+            <a href="https://vercel.com" target="_blank" class="tool-card">
+                <span class="tool-icon">▲</span>
+                <div class="tool-info">
+                    <div class="tool-name">Vercel</div>
+                    <div class="tool-desc">Публикация сайта в интернет</div>
+                </div>
+                <span class="tool-badge free">бесплатно</span>
+            </a>
+            <a href="https://drive.google.com/drive/folders/1B7boRdmAbOyR6GhSlKFTdtMYssjVC5no" target="_blank" class="tool-card">
+                <span class="tool-icon">📁</span>
+                <div class="tool-info">
+                    <div class="tool-name">Скиллы из видео</div>
+                    <div class="tool-desc">Google Drive с материалами</div>
+                </div>
+                <span class="tool-badge free">бесплатно</span>
+            </a>
+        </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- SKILLS -->
+    <section class="section" id="skills">
+        <h2 class="section-title"><span class="emoji">📦</span>Скиллы из видео</h2>
+        <p style="font-size:15px;color:var(--text2);margin-bottom:24px;line-height:1.7;">Скиллы - это готовые инструкции для Claude Code, которые автоматизируют сложные задачи. Скачай их с Google Drive и перетащи в папку проекта в Antigravity.</p>
+        <div class="tools-grid">
+            <a href="https://drive.google.com/drive/folders/1B7boRdmAbOyR6GhSlKFTdtMYssjVC5no" target="_blank" class="tool-card" style="border-color:rgba(255,107,53,0.2);">
+                <span class="tool-icon">🎯</span>
+                <div class="tool-info">
+                    <div class="tool-name">Scroll Stop Prompter</div>
+                    <div class="tool-desc">Генерирует промпты для создания ключевых кадров</div>
+                </div>
+                <span class="tool-badge free">скачать</span>
+            </a>
+            <a href="https://drive.google.com/drive/folders/1B7boRdmAbOyR6GhSlKFTdtMYssjVC5no" target="_blank" class="tool-card" style="border-color:rgba(255,107,53,0.2);">
+                <span class="tool-icon">🌐</span>
+                <div class="tool-info">
+                    <div class="tool-name">3D Website Builder</div>
+                    <div class="tool-desc">Пошаговая сборка сайта со скролл-анимацией</div>
+                </div>
+                <span class="tool-badge free">скачать</span>
+            </a>
+            <a href="https://drive.google.com/drive/folders/1B7boRdmAbOyR6GhSlKFTdtMYssjVC5no" target="_blank" class="tool-card" style="border-color:rgba(255,107,53,0.2);">
+                <span class="tool-icon">📈</span>
+                <div class="tool-info">
+                    <div class="tool-name">Seo-Strateg</div>
+                    <div class="tool-desc">Полный SEO-аудит сайта с планом действий</div>
+                </div>
+                <span class="tool-badge free">скачать</span>
+            </a>
+        </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- STEPS -->
+    <section id="steps">
+
+        <!-- STEP 1 -->
+        <div class="step-card">
+            <div class="step-number">01</div>
+            <h3 class="step-title">Собираем брендинг клиента</h3>
+            <p class="step-desc">Вытаскиваем всю информацию о бренде с существующего сайта клиента - цвета, тексты, позиционирование, стиль.</p>
+            <div class="step-actions">
+                <div class="step-action"><span class="step-action-marker">▸</span> Заходи на <a href="https://firecrawl.dev/app" target="_blank" style="color:var(--accent1)">firecrawl.dev/app</a> → Dashboard</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Слева выбери инструмент Scrape Web Page</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Вставь ссылку на сайт клиента</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> В дополнительных форматах выбери Branding и Images</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Жми Start</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Сохрани результат - он понадобится на следующих шагах</div>
+            </div>
+            <div class="tip"><span class="tip-icon">💡</span> У Firecrawl есть API - при желании можно автоматизировать этот процесс через Antigravity.</div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="step-card">
+            <div class="step-number">02</div>
+            <h3 class="step-title">Генерируем визуал через Nano Banana 2</h3>
+            <p class="step-desc">Создаём два ключевых кадра: собранный объект и его «взорванную» версию. Потом склеим их в видео.</p>
+            <div class="step-actions">
+                <div class="step-action"><span class="step-action-marker">▸</span> Открой <a href="https://higgsfield.ai/image/nano_banana_flash" target="_blank" style="color:var(--accent1)">higgsfield.ai/image/nano_banana_flash</a></div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Формат картинки: 16:9, качество 2K</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Используй скилл Scroll Stop Prompter (забери на Google Drive) - он сгенерирует тебе промпты</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Загрузи скилл в Antigravity, вызови Claude Code и попроси сгенерировать промпты под твою задачу</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Claude создаст HTML-страничку с готовыми промптами для копирования</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Скопируй Промпт A (основной кадр) → вставь в Nano Banana 2</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Batch Size: 4 - чтобы получить 4 варианта</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Прикрепи референсы: логотип компании + фото их продукта из Google</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Добавь в промпт условие: чистый белый фон, ни один элемент не касается краёв картинки</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Жми Generate, выбери лучший вариант</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Теперь возьми эту картинку как референс → скопируй Промпт B (Explosion Shot) → сгенерируй «взорванную» версию</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> На выходе: два кадра - собранный объект и разобранный</div>
+            </div>
+            <div class="tip"><span class="tip-icon">💡</span> Сделай 4-5 вариантов генерации, чтобы найти идеальный результат. Не бойся экспериментировать.</div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="step-card">
+            <div class="step-number">03</div>
+            <h3 class="step-title">Превращаем картинки в видео через Kling 3.0</h3>
+            <p class="step-desc">Склеиваем два кадра в плавную анимацию разборки/сборки.</p>
+            <div class="step-actions">
+                <div class="step-action"><span class="step-action-marker">▸</span> Открой <a href="https://higgsfield.ai/create/video" target="_blank" style="color:var(--accent1)">higgsfield.ai/create/video</a></div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Выбери Kling 3.0 Standard</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Загрузи первую картинку (собранный объект) и конечную (разобранный)</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Вставь промпт из HTML-странички (Animation Prompt)</div>
+            </div>
+            <div class="settings-block">
+                <div class="settings-title">⚙️ Настройки:</div>
+                <div class="settings-item">- Длительность: 7 секунд</div>
+                <div class="settings-item">- Качество: 1080p</div>
+                <div class="settings-item">- Multi-shot: выключить</div>
+            </div>
+            <div class="step-actions">
+                <div class="step-action"><span class="step-action-marker">▸</span> Скачай получившееся видео</div>
+            </div>
+            <div class="tip"><span class="tip-icon">💡</span> Обязательно попроси в промпте без текста - иначе текст расплывётся в видео. Можно использовать любые другие API для видео или запустить напрямую через код в Antigravity.</div>
+        </div>
+
+        <!-- STEP 4 -->
+        <div class="step-card">
+            <div class="step-number">04</div>
+            <h3 class="step-title">Собираем сайт в Antigravity</h3>
+            <p class="step-desc">Используем скилл 3D Website Builder, который пошагово ведёт по всем этапам создания сайта.</p>
+            <div class="step-actions">
+                <div class="step-action"><span class="step-action-marker">▸</span> Открой Antigravity → жми Open Folder → создай новую папку для проекта</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Скачай скилл 3D Website Builder с Google Drive и перетащи его в эту папку</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Вызови Claude Code (жми иконку расширения → откроется окно чата)</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Укажи Claude путь к скиллу и попроси сделать сайт</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Claude проведёт интервью: название бренда, логотип, цвета (вставь из Firecrawl), стиль</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Укажи белый фон для хороших переходов</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Скинь URL сайта клиента для контента</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Скажи Claude взять последнее скачанное видео с ПК</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Claude соберёт MVP-сайт со скролл-анимацией</div>
+            </div>
+            <div class="tip"><span class="tip-icon">💡</span> Переключись на автоматическое редактирование в Antigravity, чтобы не подтверждать каждое действие вручную.</div>
+        </div>
+
+        <!-- STEP 5 -->
+        <div class="step-card">
+            <div class="step-number">05</div>
+            <h3 class="step-title">Трюк с HTML - клонируем структуру любого сайта</h3>
+            <p class="step-desc">Берём рабочую структуру существующего сайта и переделываем с нашим дизайном и 3D-анимацией.</p>
+            <div class="step-actions">
+                <div class="step-action"><span class="step-action-marker">▸</span> Загугли "HTML Extractor From Website" - используй любой онлайн-инструмент</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Вставь ссылку на сайт-донор → скачай весь HTML-код</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Открой новый чат с Claude в Antigravity</div>
+            </div>
+
+            <div class="prompt-block">
+                <div class="prompt-label">
+                    <span class="prompt-label-text">💬 Промпт 1 - Клонирование структуры</span>
+                    <button class="copy-btn" onclick="copyPrompt(this)">📋 Скопировать</button>
+                </div>
+                <div class="prompt-code">Привет, я скачал HTML-код с оригинального сайта. Используй его как основу, чтобы воссоздать сайт, но с нашими текстами и скролл-анимацией фургона. Сохрани оригинальный шрифт и логотип, структура должна выглядеть знакомой, но с нашей 3D-изюминкой.</div>
+            </div>
+
+            <div class="step-actions">
+                <div class="step-action"><span class="step-action-marker">▸</span> Загрузи скачанный HTML и укажи его расположение</div>
+            </div>
+            <div class="tip"><span class="tip-icon">💡</span> Если нашёл в сети сайт с безупречной структурой - можешь сделать то же самое. Все анимации, которые были в оригинальном коде, сохранятся.</div>
+        </div>
+
+        <!-- STEP 6 -->
+        <div class="step-card">
+            <div class="step-number">06</div>
+            <h3 class="step-title">Деплоим сайт в интернет (GitHub + Vercel + MCP)</h3>
+            <p class="step-desc">Публикуем сайт, чтобы его мог открыть кто угодно по ссылке.</p>
+
+            <div class="step-subtitle">6.1 - Получаем токены:</div>
+            <div class="step-actions">
+                <div class="step-action"><span class="step-action-marker">▸</span> GitHub токен: Заходи в <a href="https://github.com/settings/tokens" target="_blank" style="color:var(--accent1)">github.com/settings/tokens</a> → Settings → Developer Settings → Personal access tokens → Tokens (classic) → Generate new token (classic) → отмечай все галочки → Create → скопируй токен</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Vercel токен: Заходи в <a href="https://vercel.com" target="_blank" style="color:var(--accent1)">vercel.com</a> → Settings → Tokens → Create → задай срок жизни → скопируй токен</div>
+            </div>
+
+            <div class="step-subtitle">6.2 - Подключаем GitHub MCP в Antigravity:</div>
+            <div class="step-actions">
+                <div class="step-action"><span class="step-action-marker">▸</span> В Antigravity жми три точки (⋯) → MCP Servers → ищи GitHub → жми Подключить → вставь токен</div>
+            </div>
+
+            <div class="step-subtitle">6.3 - Подключаем Vercel MCP:</div>
+            <div class="step-actions">
+                <div class="step-action"><span class="step-action-marker">▸</span> Напиши Claude Code в чате следующий промпт:</div>
+            </div>
+
+            <div class="prompt-block">
+                <div class="prompt-label">
+                    <span class="prompt-label-text">💬 Промпт 2 - Подключение Vercel MCP</span>
+                    <button class="copy-btn" onclick="copyPrompt(this)">📋 Скопировать</button>
+                </div>
+                <div class="prompt-code">Мне нужно подключить Vercel MCP-сервер, чтобы деплоить сайты прямо из Antigravity. Открой файл mcp_config.json (он находится по пути ~/.gemini/antigravity/mcp_config.json на Mac/Linux или C:\Users\&lt;USERNAME&gt;\.gemini\antigravity\mcp_config.json на Windows). Добавь в секцию "mcpServers" следующий блок:
+
+"vercel": {
+  "command": "npx",
+  "args": [
+    "-y",
+    "vercel-mcp",
+    "VERCEL_API_KEY=ВСТАВЬ_СЮДА_СВОЙ_ТОКЕН"
+  ],
+  "env": {},
+  "disabled": false
+}
+
+Замени ВСТАВЬ_СЮДА_СВОЙ_ТОКЕН на мой реальный Vercel токен: [вставь свой токен]
+
+После сохранения перезапусти Antigravity, чтобы MCP подхватился.</div>
+            </div>
+
+            <div class="step-actions">
+                <div class="step-action"><span class="step-action-marker">▸</span> После подключения проверь: три точки (⋯) → MCP Servers → Manage MCP Servers → должен появиться Vercel с функциями</div>
+            </div>
+
+            <div class="step-subtitle">6.4 - Деплоим:</div>
+
+            <div class="prompt-block">
+                <div class="prompt-label">
+                    <span class="prompt-label-text">💬 Промпт 3 - Деплой</span>
+                    <button class="copy-btn" onclick="copyPrompt(this)">📋 Скопировать</button>
+                </div>
+                <div class="prompt-code">Создай для этого проекта репозиторий на GitHub, запушь туда код, а потом задеплой и опубликуй новый сайт на Vercel</div>
+            </div>
+
+            <div class="step-actions">
+                <div class="step-action"><span class="step-action-marker">▸</span> Claude выдаст готовую ссылку на рабочий сайт</div>
+            </div>
+            <div class="tip"><span class="tip-icon">💡</span> GitHub - место, где лежит код. Vercel - сервис, который превращает код в рабочий сайт. Оба бесплатные.</div>
+        </div>
+
+        <!-- STEP 7 -->
+        <div class="step-card">
+            <div class="step-number">07</div>
+            <h3 class="step-title">Добавляем страницы + SEO-оптимизация</h3>
+            <p class="step-desc">Делаем сайт многостраничным и оптимизируем под поисковики.</p>
+
+            <div class="step-subtitle">7.1 - Новые страницы:</div>
+
+            <div class="prompt-block">
+                <div class="prompt-label">
+                    <span class="prompt-label-text">💬 Промпт 4 - Новые страницы</span>
+                    <button class="copy-btn" onclick="copyPrompt(this)">📋 Скопировать</button>
+                </div>
+                <div class="prompt-code">У меня есть готовая главная страница. Изучи её код и пойми визуальный стиль. Спроси меня, какие ещё страницы я хочу добавить. Для каждой новой страницы воспроизведи существующий дизайн, сделай полностью SEO-оптимизированными, адаптивными. Обнови меню навигации на всех страницах. После создания - проведи полный SEO-аудит и выдай отчёт.</div>
+            </div>
+
+            <div class="step-subtitle">7.2 - SEO-аудит через скилл:</div>
+            <div class="step-actions">
+                <div class="step-action"><span class="step-action-marker">▸</span> Скачай скилл Seo-Strateg с Google Drive</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Импортируй его в Antigravity</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Вызови через /seo или укажи Claude путь к скиллу</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Выбери «анализ всего сайта» → вставь ссылку</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Скилл проверит все страницы, robots.txt, sitemap, перелинковку</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Получишь подробный отчёт с оценкой и планом действий</div>
+            </div>
+        </div>
+
+        <!-- STEP 8 -->
+        <div class="step-card">
+            <div class="step-number">08</div>
+            <h3 class="step-title">Домен и аналитика</h3>
+            <p class="step-desc">Подключаем собственный домен и включаем отслеживание посещений.</p>
+
+            <div class="step-subtitle">Домен:</div>
+            <div class="step-actions">
+                <div class="step-action"><span class="step-action-marker">▸</span> Зайди в панель Vercel → выбери проект → Domains</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Введи купленный домен → назначь проект → готово</div>
+            </div>
+
+            <div class="step-subtitle">Аналитика:</div>
+            <div class="step-actions">
+                <div class="step-action"><span class="step-action-marker">▸</span> В Vercel → вкладка Analytics → жми Enable</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Скопируй фрагмент кода</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Вернись в Antigravity → вставь Claude: «Пожалуйста, вставь этот код Vercel Analytics на мой сайт»</div>
+                <div class="step-action"><span class="step-action-marker">▸</span> Claude добавит скрипт и запушит изменения автоматически</div>
+            </div>
+            <div class="tip"><span class="tip-icon">💡</span> Во вкладке Speed в Vercel можно проверить скорость загрузки сайта.</div>
+        </div>
+
+    </section>
+
+    <hr class="divider">
+
+    <!-- ALL LINKS -->
+    <section class="section" id="links">
+        <h2 class="section-title"><span class="emoji">🔗</span>Все ссылки</h2>
+        <div class="links-grid">
+            <a href="https://antigravity.google" target="_blank" class="link-card">
+                <span class="link-card-icon">💻</span>
+                <div class="link-card-info">
+                    <div class="link-card-name">Antigravity</div>
+                    <div class="link-card-desc">AI-IDE от Google</div>
+                </div>
+                <span class="link-card-arrow">→</span>
+            </a>
+            <a href="https://firecrawl.dev" target="_blank" class="link-card">
+                <span class="link-card-icon">🔥</span>
+                <div class="link-card-info">
+                    <div class="link-card-name">Firecrawl</div>
+                    <div class="link-card-desc">Парсинг брендинга</div>
+                </div>
+                <span class="link-card-arrow">→</span>
+            </a>
+            <a href="https://firecrawl.dev/app" target="_blank" class="link-card">
+                <span class="link-card-icon">📊</span>
+                <div class="link-card-info">
+                    <div class="link-card-name">Firecrawl Dashboard</div>
+                    <div class="link-card-desc">Панель управления</div>
+                </div>
+                <span class="link-card-arrow">→</span>
+            </a>
+            <a href="https://higgsfield.ai/image/nano_banana_flash" target="_blank" class="link-card">
+                <span class="link-card-icon">🍌</span>
+                <div class="link-card-info">
+                    <div class="link-card-name">Nano Banana 2</div>
+                    <div class="link-card-desc">Генерация картинок</div>
+                </div>
+                <span class="link-card-arrow">→</span>
+            </a>
+            <a href="https://higgsfield.ai/create/video" target="_blank" class="link-card">
+                <span class="link-card-icon">🎬</span>
+                <div class="link-card-info">
+                    <div class="link-card-name">Kling 3.0</div>
+                    <div class="link-card-desc">Генерация видео</div>
+                </div>
+                <span class="link-card-arrow">→</span>
+            </a>
+            <a href="https://github.com" target="_blank" class="link-card">
+                <span class="link-card-icon">🐙</span>
+                <div class="link-card-info">
+                    <div class="link-card-name">GitHub</div>
+                    <div class="link-card-desc">Хостинг кода</div>
+                </div>
+                <span class="link-card-arrow">→</span>
+            </a>
+            <a href="https://github.com/settings/tokens" target="_blank" class="link-card">
+                <span class="link-card-icon">🔑</span>
+                <div class="link-card-info">
+                    <div class="link-card-name">GitHub токен</div>
+                    <div class="link-card-desc">Personal access tokens</div>
+                </div>
+                <span class="link-card-arrow">→</span>
+            </a>
+            <a href="https://vercel.com" target="_blank" class="link-card">
+                <span class="link-card-icon">▲</span>
+                <div class="link-card-info">
+                    <div class="link-card-name">Vercel</div>
+                    <div class="link-card-desc">Деплой сайтов</div>
+                </div>
+                <span class="link-card-arrow">→</span>
+            </a>
+            <a href="https://drive.google.com/drive/folders/1B7boRdmAbOyR6GhSlKFTdtMYssjVC5no" target="_blank" class="link-card">
+                <span class="link-card-icon">📁</span>
+                <div class="link-card-info">
+                    <div class="link-card-name">Скиллы и ресурсы</div>
+                    <div class="link-card-desc">Google Drive</div>
+                </div>
+                <span class="link-card-arrow">→</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <div class="cta-block">
+        <div class="cta-text">Пошаговый план по&nbsp;выходу<br>на&nbsp;первые <span class="grad">100к в&nbsp;ИИ</span> в&nbsp;2026</div>
+        <a href="https://t.me/mastodont_aibot?start=agency" target="_blank" class="cta-btn">Забрать →</a>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-brand">МАСТОДОНТ</div>
+        <div class="footer-sub">AI и нейросети - просто, по делу</div>
+        <button class="footer-yt" onclick="copyChannel(this)">
+            <span>🎬</span>
+            <span>ИИ МАСТОДОНТ на YouTube</span>
+            <span style="font-size:11px;color:var(--text3)">📋 Скопировать</span>
+        </button>
+    </footer>
+
+</div>
+
+<script>
+function copyPrompt(btn) {
+    const code = btn.closest('.prompt-block').querySelector('.prompt-code');
+    navigator.clipboard.writeText(code.textContent).then(() => {
+        btn.classList.add('copied');
+        btn.innerHTML = '✓ Скопировано!';
+        setTimeout(() => {
+            btn.classList.remove('copied');
+            btn.innerHTML = '📋 Скопировать';
+        }, 2000);
+    });
+}
+
+function copyYT(el) {
+    navigator.clipboard.writeText('Claude Code + Nano Banana 2 БЕЗУМНЫЕ Сайты за $10,000').then(() => {
+        const copy = el.querySelector('.hero-yt-copy');
+        copy.textContent = '✓ Скопировано!';
+        setTimeout(() => { copy.textContent = 'Скопировать'; }, 2000);
+    });
+}
+
+function copyChannel(btn) {
+    navigator.clipboard.writeText('ИИ МАСТОДОНТ').then(() => {
+        btn.querySelector('span:last-child').textContent = '✓ Скопировано!';
+        setTimeout(() => { btn.querySelector('span:last-child').textContent = '📋 Скопировать'; }, 2000);
+    });
+}
+
+// Smooth scroll for nav links
+document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', e => {
+        e.preventDefault();
+        const target = document.querySelector(link.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+});
+</script>
+
+</body>
+</html>
